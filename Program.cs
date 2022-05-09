@@ -1,47 +1,34 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-namespace DriveManager
+class FileWriter
 {
-    class Program
+    public static void Main()
     {
-        static void Main(string[] args)
-        {
-            // получим системные диски
-            DriveInfo[] drives = DriveInfo.GetDrives();
+        string filePath = @"C:\Users\kamin0\source\repos\fileSystem\Program.cs"; // Укажем путь 
+        //if (!File.Exists(filePath)) // Проверим, существует ли файл по данному пути
+        //{
+            //   Если не существует - создаём и записываем в строку
+           // using (StreamWriter sw = File.CreateText(filePath))  // Конструкция Using (будет рассмотрена в последующих юнитах)
+            //{
+             //   sw.WriteLine("Олег");
+            //    sw.WriteLine("Дмитрий");
+           //     sw.WriteLine("Иван");
+           // }
+       // }
+        // Откроем файл и прочитаем его содержимое
 
-            // Пробежимся по дискам и выведем их свойства
-            foreach (DriveInfo drive in drives.Where(d => d.DriveType == DriveType.Fixed))
+        using (StreamReader sr = File.OpenText(filePath))
+        {
+            string str = "";
+            while ((str = sr.ReadLine()) != null) // Пока не кончатся строки - считываем из файла по одной и выводим в консоль
             {
-                WtiteDriveInfo(drive);
-                
-                DirectoryInfo root = drive.RootDirectory;
-                var folders = root.GetDirectories();
-                WtiteFolderInfo(folders);
+                Console.WriteLine(str);
             }
         }
-
-        public static void WtiteDriveInfo(DriveInfo drive)
+        using (StreamWriter sw = File.AppendText(filePath))
         {
-            Console.WriteLine($"Название: {drive.Name}");
-            Console.WriteLine($"Тип: {drive.DriveType}");
-            if (drive.IsReady)
-            {
-                Console.WriteLine($"Объем: {drive.TotalSize}");
-                Console.WriteLine($"Свободно: {drive.TotalFreeSpace}");
-                Console.WriteLine($"Метка: {drive.VolumeLabel}");
-            }
+            sw.WriteLine("//Последний раз программа запускалась: {0}", DateTime.Now);
         }
-        public static void WtiteFolderInfo(DirectoryInfo [] folders)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Папки: ");
-            Console.WriteLine();
-            foreach (var folder in folders)
-            {
-                Console.WriteLine(folder.Name);
-            }
-        }
-
     }
-}
+}//Последний раз программа запускалась: 09.05.2022 15:32:00
+//Последний раз программа запускалась: 09.05.2022 15:32:16
