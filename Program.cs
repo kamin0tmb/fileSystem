@@ -5,8 +5,10 @@ using DirectoryE;
 
 namespace DriveManager
 {
+    
     class Program
     {
+        public static FileInfo configFile = new FileInfo(@"C:\Users\kamin0\Desktop\SystemConfig.txt");
         static void Main(string[] args)
         {
             // получим системные диски
@@ -15,52 +17,59 @@ namespace DriveManager
             // Пробежимся по дискам и выведем их свойства
             foreach (DriveInfo drive in drives.Where(d => d.DriveType == DriveType.Fixed))
             {
-                WtiteDriveInfo(drive);
+                
 
                 DirectoryInfo root = drive.RootDirectory;
                 var folders = root.GetDirectories();
-                WtiteFileInfo(root);
-                WtiteFolderInfo(folders);
+                Console.WriteLine($"Сканируется диск {drive.Name}") ;
+                using (StreamWriter sw = configFile.AppendText())
+                {
+                    WtiteDriveInfo(drive, sw);
+                    WtiteFileInfo(root, sw);
+                    WtiteFolderInfo(folders, sw);
+                }
+                Console.WriteLine("завершено");
+                Console.WriteLine("___");
             }
         }
 
-        public static void WtiteDriveInfo(DriveInfo drive)
+        public static void WtiteDriveInfo(DriveInfo drive, StreamWriter sw)
         {
-            Console.WriteLine($"Название: {drive.Name}");
-            Console.WriteLine($"Тип: {drive.DriveType}");
+            sw.WriteLine($"Название: {drive.Name}");
+            sw.WriteLine($"Тип: {drive.DriveType}");
             if (drive.IsReady)
             {
-                Console.WriteLine($"Объем: {drive.TotalSize}");
-                Console.WriteLine($"Свободно: {drive.TotalFreeSpace}");
-                Console.WriteLine($"Метка: {drive.VolumeLabel}");
+                sw.WriteLine($"Объем: {drive.TotalSize}");
+                sw.WriteLine($"Свободно: {drive.TotalFreeSpace}");
+                sw.WriteLine($"Метка: {drive.VolumeLabel}");
             }
         }
-        public static void WtiteFolderInfo(DirectoryInfo[] folders)
+        public static void WtiteFolderInfo(DirectoryInfo[] folders, StreamWriter sw)
         {
-            Console.WriteLine();
-            Console.WriteLine("Папки: ");
-            Console.WriteLine();
+            sw.WriteLine();
+            sw.WriteLine("Папки: ");
+            sw.WriteLine();
             foreach (var folder in folders)
             {
                 try
                 {
-                    Console.WriteLine(folder.Name + "- {0} байт", DirectoryExtension.DirSize(folder));
+                    sw.WriteLine(folder.Name + "- {0} байт", DirectoryExtension.DirSize(folder));
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(folder.Name + " Не удалось рассчитать размер - ошибка: {0}", e.Message);
+                    sw.WriteLine(folder.Name + " Не удалось рассчитать размер - ошибка: {0}", e.Message);
                 }
             }
         }
-        public static void WtiteFileInfo(DirectoryInfo rootFolder)
+        public static void WtiteFileInfo(DirectoryInfo rootFolder, StreamWriter sw)
         {
-            Console.WriteLine();
-            Console.WriteLine("Файлы: ");
-            Console.WriteLine();
+            sw.WriteLine();
+            sw.WriteLine("Файлы: ");
+            sw.WriteLine();
             foreach (var files in rootFolder.GetFiles())
             {
                 
-                    Console.WriteLine(files.Name + "- {0} байт", files.Length);
+                    sw.WriteLine(files.Name + "- {0} байт", files.Length);
                 
             }
         }
