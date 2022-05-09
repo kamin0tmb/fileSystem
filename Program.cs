@@ -9,8 +9,9 @@ namespace fileSystem
 
         static void Main(string[] args)
         {
-            GetCatalogs(); //   Вызов метода получения директорий
             CreateCatalog();
+            GetCatalogs(); //   Вызов метода получения директорий
+            
         }
 
         static void GetCatalogs()
@@ -30,7 +31,7 @@ namespace fileSystem
         }
         static void CreateCatalog()
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(@"D:\\1\");
+            DirectoryInfo dirInfo = new DirectoryInfo(@"D:\\2\");
             if (!dirInfo.Exists)
                 dirInfo.Create();
 
