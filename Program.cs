@@ -1,81 +1,47 @@
 ﻿using System;
 using System.IO;
-
-
-namespace fileSystem
+using System.Linq;
+namespace DriveManager
 {
     class Program
     {
-
         static void Main(string[] args)
         {
-            CreateCatalog();
-            GetCatalogs(); //   Вызов метода получения директорий
-            //CatalogMove();
-            //CatalogDelete();
-            Trash();
+            // получим системные диски
+            DriveInfo[] drives = DriveInfo.GetDrives();
 
-        }
-
-        static void GetCatalogs()
-        {
-            try
+            // Пробежимся по дискам и выведем их свойства
+            foreach (DriveInfo drive in drives.Where(d => d.DriveType == DriveType.Fixed))
             {
-                DirectoryInfo dirInfo = new DirectoryInfo(@"C:\Users\kamin0\Desktop\" /* Или С:\\ для Windows */ );
-                if (dirInfo.Exists)
-                {
-                    Console.WriteLine(dirInfo.GetDirectories().Length + dirInfo.GetFiles().Length);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                WtiteDriveInfo(drive);
+                
+                DirectoryInfo root = drive.RootDirectory;
+                var folders = root.GetDirectories();
+                WtiteFolderInfo(folders);
             }
         }
-        static void CreateCatalog()
+
+        public static void WtiteDriveInfo(DriveInfo drive)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(@"C:\Users\kamin0\Desktop\");
-            if (!dirInfo.Exists)
-                dirInfo.Create();
-
-            dirInfo.CreateSubdirectory("NewFolder");
-        }
-
-        //static void CatalogDelete()
-        //{
-        //   try
-        //    {
-         //       DirectoryInfo dirInfo = new DirectoryInfo(@"D:\\2\");
-          //      dirInfo.Delete(true); // Удаление со всем содержимым
-           //     Console.WriteLine("Каталог удален");
-           // }
-           // catch (Exception ex)
-           // {
-           //     Console.WriteLine(ex.Message);
-           /// }
-        //}
-        static void CatalogMove()
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(@"C:\Users\kamin0\Desktop\NewFolder");
-            string newPath = @"C:\$RECYCLE.BIN\NewFolder";
-
-            if (dirInfo.Exists && Directory.Exists(@"C:\Users\kamin0\Desktop\NewFolder")) ;
-            dirInfo.MoveTo(newPath);
-
-        }
-        static void Trash()
-        {
-            try
+            Console.WriteLine($"Название: {drive.Name}");
+            Console.WriteLine($"Тип: {drive.DriveType}");
+            if (drive.IsReady)
             {
-                DirectoryInfo dirInfo = new DirectoryInfo(@"C:\Users\kamin0\Desktop\NewFolder");
-                string trashPath = @"C:\$RECYCLE.BIN\NewFolder";
-
-                dirInfo.MoveTo(trashPath);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"Объем: {drive.TotalSize}");
+                Console.WriteLine($"Свободно: {drive.TotalFreeSpace}");
+                Console.WriteLine($"Метка: {drive.VolumeLabel}");
             }
         }
+        public static void WtiteFolderInfo(DirectoryInfo [] folders)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Папки: ");
+            Console.WriteLine();
+            foreach (var folder in folders)
+            {
+                Console.WriteLine(folder.Name);
+            }
+        }
+
     }
 }
