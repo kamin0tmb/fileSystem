@@ -19,6 +19,7 @@ namespace DriveManager
 
                 DirectoryInfo root = drive.RootDirectory;
                 var folders = root.GetDirectories();
+                WtiteFileInfo(root);
                 WtiteFolderInfo(folders);
             }
         }
@@ -47,8 +48,20 @@ namespace DriveManager
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(folder.Name + "Не удалось рассчитать размер - ошибка: {0}", e.Message);
+                    Console.WriteLine(folder.Name + " Не удалось рассчитать размер - ошибка: {0}", e.Message);
                 }
+            }
+        }
+        public static void WtiteFileInfo(DirectoryInfo rootFolder)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Файлы: ");
+            Console.WriteLine();
+            foreach (var files in rootFolder.GetFiles())
+            {
+                
+                    Console.WriteLine(files.Name + "- {0} байт", files.Length);
+                
             }
         }
 
