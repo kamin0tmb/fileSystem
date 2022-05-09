@@ -1,49 +1,32 @@
 ﻿using System;
-using fileSystem;
+using System.IO;
 
 namespace fileSystem
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GetCatalogs(); //   Вызов метода получения директорий
+        }
+
+        static void GetCatalogs()
+        {
+            try
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo(@"D:\\" /* Или С:\\ для Windows */ );
+                if (dirInfo.Exists)
+                {
+                    Console.WriteLine(dirInfo.GetDirectories().Length + dirInfo.GetFiles().Length);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
         }
     }
-    public class Drive
-    {
-        public Drive(string name, long totalSpace, long freeSpace)
-        {
-            Name = name;
-            TotalSpace = totalSpace;
-            FreeSpace = freeSpace;
-        }
-
-        public string Name { get; }
-        public long TotalSpace { get; }
-        public long FreeSpace { get; }
-    }
-    public class Folder
-    {
-        public Folder(string name)
-        {
-            Name = name;
-        }
-        string Name { get; set; }
-        List<string> Files { get; set; } = new List<string>();
-        public List<string> Files { get; set; } = new List<string>();
-        Dictionary<string, Folder> Folders = new Dictionary<string, Folder>();
-
-        public void CreateFolder(string name)
-        {
-            Folders.Add(name, new Folder());
-        }
-        public void AddFile(string name)
-        {
-            if (!Files.Contains(name))
-                Files.Add(name);
-        }
-    }
-
-
 }
