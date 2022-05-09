@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+
 namespace fileSystem
 {
     class Program
@@ -9,6 +10,7 @@ namespace fileSystem
         static void Main(string[] args)
         {
             GetCatalogs(); //   Вызов метода получения директорий
+            CreateCatalog();
         }
 
         static void GetCatalogs()
@@ -25,8 +27,16 @@ namespace fileSystem
             {
                 Console.WriteLine(e.Message);
             }
-
-
         }
+        static void CreateCatalog()
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(@"D:\\1\");
+            if (!dirInfo.Exists)
+                dirInfo.Create();
+
+            dirInfo.CreateSubdirectory("NewFolder");
+            }
+        }
+        
     }
-}
+
